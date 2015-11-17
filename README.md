@@ -6,7 +6,7 @@ A plugin for the [tennu](https://github.com/Tennu/tennu) irc framework.
 Returns results from google. Requires admin, but supports [cooldowns](https://github.com/LordWingZero/tennu-admin-cooldown) for usage by everyone.
 
 Different from other Google tennu plugins by these features:
-- Limitable-results
+- Limitable-results by config or with command arguments (-l)
 - Hooks into my cooldown system
 - Uses the tennu-logger instead of writing directly to console
 
