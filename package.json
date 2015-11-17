@@ -8,7 +8,9 @@
     "url": "https://github.com/LordWingZero/tennu-google"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "preversion": "git add .",
+    "postversion": "git push && git push --tags"    
   },
   "author": "Victorio Berra",
   "license": "ISC",
