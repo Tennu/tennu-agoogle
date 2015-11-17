@@ -16,13 +16,15 @@ Different from other Google tennu plugins by these features:
 
 ```Javascript
 "google":{
-  "limitResults": 1
+  "limitResults": 1,
+  "maxUserDefinedLimit": 3 // users can pass -l=8 unless you set a max.
 }
 ```
 
 ### Usage
 
-- **!google** <query>
+- **!google** [-l] <query>
+- - **-l** limit 1-8 (overrides config result limit) 
 
 ### Requires
 
