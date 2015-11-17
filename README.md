@@ -1,8 +1,14 @@
-# tennu-google 1.0.0
+# tennu-agoogle
+### Tennu Advanced Google Command
 
 A plugin for the [tennu](https://github.com/Tennu/tennu) irc framework.
 
 Returns results from google. Requires admin, but supports [cooldowns](https://github.com/LordWingZero/tennu-admin-cooldown) for usage by everyone.
+
+Different from other Google tennu plugins by these features:
+- Limitable-results
+- Hooks into my cooldown system
+- Uses the tennu-logger instead of writing directly to console
 
 ### Configuration
 
@@ -16,7 +22,7 @@ Returns results from google. Requires admin, but supports [cooldowns](https://gi
 
 ### Usage
 
-- **!google** : <query>
+- **!google** <query>
 
 ### Requires
 
@@ -33,19 +39,3 @@ See Downloadable Plugins [here](https://tennu.github.io/plugins/).
 ### Todo:
 
 - Tests
- 
-### License
-
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
-                    Version 2, December 2004
-
- Copyright (C) 2015 Victorio Berra
-
- Everyone is permitted to copy and distribute verbatim or modified
- copies of this license document, and changing it is allowed as long
- as the name is changed.
-
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
-   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
-
-  0. You just DO WHAT THE FUCK YOU WANT TO.
