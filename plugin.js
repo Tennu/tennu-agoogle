@@ -19,6 +19,14 @@ var TennuGoogle = {
         const requiresAdminHelp = "Requires admin privileges.";
         const googleRequestFailed = 'Failed to fetch results from Google.';
 
+        var googleConfig = client.config("google");
+        
+        // Confirm config values are present
+        if(!googleConfig || !googleConfig.hasOwnProperty('limitResults') || !googleConfig.hasOwnProperty('maxUserDefinedLimit'))
+        {
+            throw Error('tennu-agoogle: is missing some or all of its configuration.');   
+        }
+
         var isAdmin = imports.admin.isAdmin;
         if (adminCooldown) {
             var cooldown = client.config("google")['cooldown'];
@@ -29,11 +37,11 @@ var TennuGoogle = {
                 isAdmin = adminCooldown.isAdmin;
             }
         }
+        
+        var limitResults = googleConfig.limitResults;
+        var maxUserDefinedLimit = googleConfig.maxUserDefinedLimit;
 
-        var limitResults = client.config("google").limitResults;
-        var maxUserDefinedLimit = client.config("google").maxUserDefinedLimit;
-
-        // Validate config
+        // Validate config values
         if (maxUserDefinedLimit < 1 || maxUserDefinedLimit > 8) {
             client._logger.warn(format('tennu-agoogle: maxUserDefinedLimit must be between 1 and 8. Caugfht "%s" Defaulting to 1.', maxUserDefinedLimit));
             maxUserDefinedLimit = 1;
