@@ -19,7 +19,7 @@ var TennuGoogle = {
         const requiresAdminHelp = "Requires admin privileges.";
         const googleRequestFailed = 'Failed to fetch results from Google.';
 
-        var googleConfig = client.config("google");
+        var googleConfig = client.config("agoogle");
         
         // Confirm config values are present
         if(!googleConfig || !googleConfig.hasOwnProperty('limitResults') || !googleConfig.hasOwnProperty('maxUserDefinedLimit'))
@@ -29,7 +29,7 @@ var TennuGoogle = {
 
         var isAdmin = imports.admin.isAdmin;
         if (adminCooldown) {
-            var cooldown = client.config("google")['cooldown'];
+            var cooldown = googleConfig['cooldown'];
             if (!cooldown) {
                 client._logger.warn('tennu-google: Cooldown plugin found but no cooldown defined.')
             }
