@@ -1,6 +1,6 @@
 {
   "name": "tennu-agoogle",
-  "version": "4.0.2",
+  "version": "4.0.3",
   "description": "A plugin for the Tennu IRC framework. Returns results from google. Requires admin, but supports cooldowns for usage by everyone.",
   "main": "plugin.js",
   "repository": {
