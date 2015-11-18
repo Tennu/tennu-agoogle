@@ -62,7 +62,7 @@ var TennuGoogle = {
         };
 
         function handleSearch(IRCMessage) {
-            return isAdmin(IRCMessage.hostmask, "google").then(function(isadmin) {
+            return isAdmin(IRCMessage.hostmask).then(function(isadmin) {
 
                     // isAdmin will be "undefined" if cooldown system is enabled
                     // isAdmin will be true/false if cooldown system is disabled
