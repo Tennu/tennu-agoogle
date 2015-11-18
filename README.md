@@ -28,7 +28,7 @@ Returns results from google. Requires admin, but supports [cooldowns](https://gi
 
 ### Additional features
 
-[Works with tennu-admin-cooldown](https://github.com/LordWingZero/tennu-admin-cooldown)
+[Works with tennu-cooldown](https://github.com/LordWingZero/tennu-cooldown)
 
 ### Installing Into Tennu
 

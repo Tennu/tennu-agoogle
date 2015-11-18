@@ -14,8 +14,6 @@ var TennuGoogle = {
     requiresRoles: ["admin"],
     init: function(client, imports) {
 
-        const adminCooldown = client._plugins.getRole("cooldown");
-
         const requiresAdminHelp = "Requires admin privileges.";
         const googleRequestFailed = 'Failed to fetch results from Google.';
 
@@ -27,13 +25,15 @@ var TennuGoogle = {
         }
 
         var isAdmin = imports.admin.isAdmin;
+        const adminCooldown = client._plugins.getRole("cooldown");
         if (adminCooldown) {
             var cooldown = googleConfig['cooldown'];
             if (!cooldown) {
-                client._logger.warn('tennu-google: Cooldown plugin found but no cooldown defined.')
+                client._logger.warn('tennu-google: Cooldown plugin found but no cooldown defined.');
             }
             else {
                 isAdmin = adminCooldown(cooldown);
+                client._logger.notice('tennu-agoogle: cooldowns enabled: ' + cooldown + ' seconds.');
             }
         }
 
@@ -109,8 +109,7 @@ var TennuGoogle = {
                         };
                     });
 
-                })
-                .catch(adminFail);
+                }).catch(adminFail);
         };
 
         function adminFail(err) {
