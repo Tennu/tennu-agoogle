@@ -64,52 +64,52 @@ var TennuGoogle = {
         function handleSearch(IRCMessage) {
             return isAdmin(IRCMessage.hostmask).then(function(isadmin) {
 
-                    // isAdmin will be "undefined" if cooldown system is enabled
-                    // isAdmin will be true/false if cooldown system is disabled
-                    if (typeof(isAdmin) !== "undefined" && isAdmin === false) {
-                        throw new Error(requiresAdminHelp);
+                // isadmin will be "undefined" if cooldown system is enabled
+                // isadmin will be true/false if cooldown system is disabled
+                if (typeof(isadmin) !== "undefined" && isadmin === false) {
+                    throw new Error(requiresAdminHelp);
+                }
+
+                // Its important to note, the default minimist values are set via the config.
+                // Otherwise, changing limitResults would persist.
+                var sayArgs = parseArgs(IRCMessage.args, minimistConfig);
+
+                if (sayArgs.limit) {
+                    var limit = parseInt(sayArgs.limit);
+                    if (limit !== "NaN" && limit > 0 && limit <= maxUserDefinedLimit) {
+                        limitResults = sayArgs.limit;
                     }
-
-                    // Its important to note, the default minimist values are set via the config.
-                    // Otherwise, changing limitResults would persist.
-                    var sayArgs = parseArgs(IRCMessage.args, minimistConfig);
-
-                    if (sayArgs.limit) {
-                        var limit = parseInt(sayArgs.limit);
-                        if (limit !== "NaN" && limit > 0 && limit <= maxUserDefinedLimit) {
-                            limitResults = sayArgs.limit;
-                        }
-                        else {
-                            return {
-                                intent: "notice",
-                                query: true,
-                                message: format('%s is not valid. Please pass in 1-%s.', sayArgs.limit, maxUserDefinedLimit)
-                            };
-                        }
-                    }
-
-                    return google(sayArgs._.join(' '), limitResults).then(function(response) {
-
-                        if (!response.responseData.results.length) {
-                            return 'No results.';
-                        }
-
-                        var results = response.responseData.results.slice(0, limitResults);
-                        return results.map(function(result) {
-                            return format('%s - %s', result.titleNoFormatting, result.unescapedUrl);
-                        });
-
-                    }).catch(function(err) {
-                        client._logger.error(googleRequestFailed);
-                        client._logger.error(err);
+                    else {
                         return {
-                            intent: 'notice',
+                            intent: "notice",
                             query: true,
-                            message: googleRequestFailed
+                            message: format('%s is not valid. Please pass in 1-%s.', sayArgs.limit, maxUserDefinedLimit)
                         };
+                    }
+                }
+
+                return google(sayArgs._.join(' '), limitResults).then(function(response) {
+
+                    if (!response.responseData.results.length) {
+                        return 'No results.';
+                    }
+
+                    var results = response.responseData.results.slice(0, limitResults);
+                    return results.map(function(result) {
+                        return format('%s - %s', result.titleNoFormatting, result.unescapedUrl);
                     });
 
-                }).catch(adminFail);
+                }).catch(function(err) {
+                    client._logger.error(googleRequestFailed);
+                    client._logger.error(err);
+                    return {
+                        intent: 'notice',
+                        query: true,
+                        message: googleRequestFailed
+                    };
+                });
+
+            }).catch(adminFail);
         };
 
         function adminFail(err) {
