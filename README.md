@@ -3,7 +3,7 @@
 
 A plugin for the [tennu](https://github.com/Tennu/tennu) irc framework.
 
-Returns results from google. Requires admin, but supports [cooldowns](https://github.com/LordWingZero/tennu-admin-cooldown) for usage by everyone.
+Returns results from google. Supports [cooldowns](https://github.com/LordWingZero/tennu-admin-cooldown) for limiting public usage.
 
 ### Configuration
 
@@ -21,14 +21,6 @@ Returns results from google. Requires admin, but supports [cooldowns](https://gi
 
 - **!google** [-l] <query>
 - - **-l** limit 1-8 (overrides config result limit) 
-
-### Requires
-
-[tennu-admin](https://github.com/Tennu/tennu-admin)
-
-### Additional features
-
-[Works with tennu-cooldown](https://github.com/LordWingZero/tennu-cooldown)
 
 ### Installing Into Tennu
 
