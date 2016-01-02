@@ -11,10 +11,8 @@ const helps = {
 };
 
 var TennuGoogle = {
-    requiresRoles: ["admin"],
     init: function(client, imports) {
 
-        const requiresAdminHelp = "Requires admin privileges.";
         const googleRequestFailed = 'Failed to fetch results from Google.';
 
         var googleConfig = client.config("agoogle");
@@ -22,19 +20,6 @@ var TennuGoogle = {
         // Confirm config values are present
         if (!googleConfig || !googleConfig.hasOwnProperty('limitResults') || !googleConfig.hasOwnProperty('maxUserDefinedLimit')) {
             throw Error('tennu-agoogle: is missing some or all of its configuration.');
-        }
-
-        var isAdmin = imports.admin.isAdmin;
-        const adminCooldown = client._plugins.getRole("cooldown");
-        if (adminCooldown) {
-            var cooldown = googleConfig['cooldown'];
-            if (!cooldown) {
-                client._logger.warn('tennu-google: Cooldown plugin found but no cooldown defined.');
-            }
-            else {
-                isAdmin = adminCooldown(cooldown);
-                client._logger.notice('tennu-agoogle: cooldowns enabled: ' + cooldown + ' seconds.');
-            }
         }
 
         var limitResults = googleConfig.limitResults;
@@ -62,54 +47,46 @@ var TennuGoogle = {
         };
 
         function handleSearch(IRCMessage) {
-            return isAdmin(IRCMessage.hostmask).then(function(isadmin) {
 
-                // isadmin will be "undefined" if cooldown system is enabled
-                // isadmin will be true/false if cooldown system is disabled
-                if (typeof(isadmin) !== "undefined" && isadmin === false) {
-                    throw new Error(requiresAdminHelp);
+            // Its important to note, the default minimist values are set via the config.
+            // Otherwise, changing limitResults would persist.
+            var sayArgs = parseArgs(IRCMessage.args, minimistConfig);
+
+            if (sayArgs.limit) {
+                var limit = parseInt(sayArgs.limit);
+                if (limit !== "NaN" && limit > 0 && limit <= maxUserDefinedLimit) {
+                    limitResults = sayArgs.limit;
                 }
-
-                // Its important to note, the default minimist values are set via the config.
-                // Otherwise, changing limitResults would persist.
-                var sayArgs = parseArgs(IRCMessage.args, minimistConfig);
-
-                if (sayArgs.limit) {
-                    var limit = parseInt(sayArgs.limit);
-                    if (limit !== "NaN" && limit > 0 && limit <= maxUserDefinedLimit) {
-                        limitResults = sayArgs.limit;
-                    }
-                    else {
-                        return {
-                            intent: "notice",
-                            query: true,
-                            message: format('%s is not valid. Please pass in 1-%s.', sayArgs.limit, maxUserDefinedLimit)
-                        };
-                    }
-                }
-
-                return google(sayArgs._.join(' '), limitResults).then(function(response) {
-
-                    if (!response.responseData.results.length) {
-                        return 'No results.';
-                    }
-
-                    var results = response.responseData.results.slice(0, limitResults);
-                    return results.map(function(result) {
-                        return format('%s - %s', result.titleNoFormatting, result.unescapedUrl);
-                    });
-
-                }).catch(function(err) {
-                    client._logger.error(googleRequestFailed);
-                    client._logger.error(err);
+                else {
                     return {
-                        intent: 'notice',
+                        intent: "notice",
                         query: true,
-                        message: googleRequestFailed
+                        message: format('%s is not valid. Please pass in 1-%s.', sayArgs.limit, maxUserDefinedLimit)
                     };
+                }
+            }
+
+            return google(sayArgs._.join(' '), limitResults).then(function(response) {
+
+                if (!response.responseData.results.length) {
+                    return 'No results.';
+                }
+
+                var results = response.responseData.results.slice(0, limitResults);
+                return results.map(function(result) {
+                    return format('%s - %s', result.titleNoFormatting, result.unescapedUrl);
                 });
 
-            }).catch(adminFail);
+            }).catch(function(err) {
+                client._logger.error(googleRequestFailed);
+                client._logger.error(err);
+                return {
+                    intent: 'notice',
+                    query: true,
+                    message: googleRequestFailed
+                };
+            });
+
         };
 
         function adminFail(err) {
