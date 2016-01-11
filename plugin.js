@@ -11,16 +11,17 @@ const helps = {
 };
 
 var TennuGoogle = {
+    configDefaults: {
+        "agoogle": {
+            "limitResults": 1,
+            "maxUserDefinedLimit": 3
+        },
+    },
     init: function(client, imports) {
 
         const googleRequestFailed = 'Failed to fetch results from Google.';
 
         var googleConfig = client.config("agoogle");
-
-        // Confirm config values are present
-        if (!googleConfig || !googleConfig.hasOwnProperty('limitResults') || !googleConfig.hasOwnProperty('maxUserDefinedLimit')) {
-            throw Error('tennu-agoogle: is missing some or all of its configuration.');
-        }
 
         var limitResults = googleConfig.limitResults;
         var maxUserDefinedLimit = googleConfig.maxUserDefinedLimit;
